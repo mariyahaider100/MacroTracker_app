@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  /* Layout */
+  .page-wrap { max-width: 1100px; margin: 0 auto; padding: 12px 0 32px; }
+  .summary-head { display:flex; align-items:center; justify-content:space-between; margin: 8px 0 18px; }
+  .summary-head h1 { font-size: 28px; margin: 0; font-weight: 700; color: #0b3b33; }
+
+  /* Summary cards */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .summary-card {
+    border-radius: 10px;
+    padding: 18px;
+    background: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+  }
+  .summary-card .label { font-size: 14px; opacity: .85; margin-bottom: 8px; }
+  .summary-card .value { font-size: 28px; font-weight: 800; }
+
+  /* Themed backgrounds (soft like in screenshot) */
+  .bg-cal { background: #ffe8c7; }
+  .bg-pro { background: #dff1e0; }
+  .bg-car { background: #dbeafe; }
+  .bg-fat { background: #ffdfe4; }
+
+  /* Sections */
+  .section { background:#fff; border-radius:10px; box-shadow: 0 2px 10px rgba(0,0,0,.06); padding:18px; }
+  .section + .section { margin-top: 18px; }
+  .section h3 { margin:0 0 12px; color:#0b3b33; font-weight:700; }
+
+  /* 3-column content grid */
+  .cards-3 {
+    display:grid; gap:18px;
+    grid-template-columns: 1.2fr 1fr 1fr;
+  }
+
+  /* Lists */
+  .list { margin:0; padding:0; list-style:none; }
+  .list li { padding:10px 12px; border-radius:8px; }
+  .list li:nth-child(odd){ background:#f7faf9; }
+  .muted { color:#6b7280; }
+
+  /* Buttons/links */
+  .btn {
+    display:inline-block;
+    background:#0f5132; color:#fff; text-decoration:none;
+    padding:8px 14px; border-radius:8px; font-weight:600;
+  }
+  .btn:hover { filter:brightness(.95); }
+
+  /* Small helpers */
+  .totals-inline { display:flex; gap:14px; flex-wrap:wrap; }
+  .pill { background:#eef5f3; border-radius:999px; padding:6px 10px; font-size:14px; }
+  @media (max-width: 960px){
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .cards-3 { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="page-wrap">
+  <div class="summary-head">
+    <h1>Today's Summary ({{ today.strftime('%d %b %Y') }})</h1>
+  </div>
+
+  <!-- Summary boxes -->
+  <div class="summary-grid">
+    <div class="summary-card bg-cal">
+      <div>
+        <div class="label">Calories</div>
+        <div class="value">{{ '%.2f'|format(totals.calories) }} kcal</div>
+      </div>
+    </div>
+    <div class="summary-card bg-pro">
+      <div>
+        <div class="label">Protein</div>
+        <div class="value">{{ '%.2f'|format(totals.protein) }} g</div>
+      </div>
+    </div>
+    <div class="summary-card bg-car">
+      <div>
+        <div class="label">Carbs</div>
+        <div class="value">{{ '%.2f'|format(totals.carbs) }} g</div>
+      </div>
+    </div>
+    <div class="summary-card bg-fat">
+      <div>
+        <div class="label">Fat</div>
+        <div class="value">{{ '%.2f'|format(totals.fat) }} g</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content cards (3-column like the screenshot) -->
+  <div class="cards-3">
+    <!-- Totals as pills (kept for exact functionality parity) -->
+    <div class="section">
+      <h3>Totals</h3>
+      <div class="totals-inline">
+        <span class="pill">Calories: {{ '%.0f'|format(totals.calories) }}</span>
+        <span class="pill">Protein: {{ '%.1f'|format(totals.protein) }} g</span>
+        <span class="pill">Carbs: {{ '%.1f'|format(totals.carbs) }} g</span>
+        <span class="pill">Fat: {{ '%.1f'|format(totals.fat) }} g</span>
+      </div>
+    </div>
+
+    <!-- Meals Today -->
+    <div class="section">
+      <h3>Meals Today</h3>
+      {% if meals %}
+        <ul class="list">
+          {% for m in meals %}
+            <li><strong>{{ m.name }}</strong> <span class="muted">— {{ m.date }}</span></li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">No meals yet.</p>
+        <a class="btn" href="{{ url_for('meal_new') }}">Create Meal</a>
+      {% endif %}
+    </div>
+
+    <!-- Consumptions Today -->
+    <div class="section">
+      <h3>Consumptions Today</h3>
+      {% if consumptions %}
+        <ul class="list">
+          {% for c in consumptions %}
+            <li>
+              <strong>{{ c.meal.name if c.meal else 'No Meal' }}</strong>:
+              {{ c.product.name }} — {{ c.quantity_g }} g
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted">No consumptions yet.</p>
+        <a class="btn" href="{{ url_for('consumption_new') }}">Add Consumption</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

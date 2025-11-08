@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .page-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+  }
+  .page-head h1{
+    font-size:26px;
+    font-weight:700;
+    color:#0b3b33;
+    margin:0;
+  }
+
+  .table-wrap{
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    overflow:hidden;
+  }
+
+  table.table{
+    width:100%;
+    border-collapse:collapse;
+  }
+
+  table.table thead{
+    background:#0b3b33;
+    color:#fff;
+    text-align:left;
+  }
+
+  table.table th, table.table td{
+    padding:14px 16px;
+    vertical-align:middle;
+  }
+
+  table.table tbody tr:nth-child(odd){
+    background:#f9faf9;
+  }
+
+  table.table tbody tr:hover{
+    background:#eef5f3;
+  }
+
+  table.table td{
+    color:#0b1a16;
+    font-size:15px;
+  }
+
+  .status-yes{
+    color:#0f5132;
+    font-weight:700;
+  }
+  .status-no{
+    color:#b91c1c;
+    font-weight:600;
+  }
+</style>
+
+<div class="page-head">
+  <h1>All Users</h1>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Admin</th>
+        <th>Approved</th>
+        <th>Joined</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+        <td class="{{ 'status-yes' if u.is_admin else 'status-no' }}">{{ 'Yes' if u.is_admin else 'No' }}</td>
+        <td class="{{ 'status-yes' if u.is_approved else 'status-no' }}">{{ 'Yes' if u.is_approved else 'No' }}</td>
+        <td>{{ u.created_at.strftime('%Y-%m-%d') }}</td>
+      </tr>
+      {% endfor %}
+      {% if not users %}
+      <tr>
+        <td colspan="5" style="text-align:center; color:#6b7280; padding:20px;">
+          No users found.
+        </td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

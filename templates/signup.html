@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .auth-card {
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    max-width:420px;
+    margin:40px auto;
+    padding:32px 36px;
+    text-align:center;
+  }
+  .auth-card h1{
+    margin-top:0;
+    font-size:26px;
+    color:#0b3b33;
+    font-weight:700;
+    margin-bottom:24px;
+  }
+
+  form.form{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    text-align:left;
+  }
+
+  label{
+    font-weight:600;
+    color:#0b3b33;
+    margin-bottom:4px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"]{
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid #d1d5db;
+    font-size:15px;
+    background:#f9faf9;
+    outline:none;
+    transition:border .2s;
+  }
+
+  input:focus{
+    border-color:#0f5132;
+    background:#fff;
+  }
+
+  button[type="submit"]{
+    background:#0f5132;
+    color:#fff;
+    border:none;
+    padding:10px 16px;
+    font-weight:600;
+    font-size:16px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .2s;
+    width:100%;
+    margin-top:4px;
+  }
+
+  button[type="submit"]:hover{
+    background:#0c452c;
+  }
+
+  .auth-footer{
+    margin-top:18px;
+    color:#374151;
+    font-size:15px;
+  }
+
+  .auth-footer a{
+    color:#0f5132;
+    font-weight:600;
+    text-decoration:none;
+  }
+
+  .auth-footer a:hover{
+    text-decoration:underline;
+  }
+</style>
+
+<div class="auth-card">
+  <h1>Sign Up</h1>
+  <form method="post" class="form">
+    <div>
+      <label>Username</label>
+      <input type="text" name="username" required>
+    </div>
+    <div>
+      <label>Email</label>
+      <input type="email" name="email" required>
+    </div>
+    <div>
+      <label>Password</label>
+      <input type="password" name="password" required>
+    </div>
+    <button type="submit">Create Account</button>
+  </form>
+
+  <p class="auth-footer">
+    Already have an account?
+    <a href="{{ url_for('login') }}">Log in</a>
+  </p>
+</div>
+
+{% endblock %}

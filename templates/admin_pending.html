@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Pending Users</h1>
+{% if users %}
+  <table class="table">
+    <thead>
+      <tr><th>Username</th><th>Email</th><th>Joined</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+    {% for u in users %}
+      <tr>
+        <td>{{ u.username }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.created_at.strftime('%Y-%m-%d') }}</td>
+        <td>
+          <form method="post" action="{{ url_for('admin_approve', user_id=u.id) }}">
+            <button type="submit">Approve</button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No pending users.</p>
+{% endif %}
+{% endblock %}

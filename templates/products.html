@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .page-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+  }
+  .page-head h1{
+    font-size:26px;
+    font-weight:700;
+    color:#0b3b33;
+    margin:0;
+  }
+
+  .btn{
+    display:inline-block;
+    background:#0f5132;
+    color:#fff;
+    text-decoration:none;
+    padding:8px 14px;
+    border-radius:8px;
+    font-weight:600;
+    transition:background .2s;
+  }
+  .btn:hover{ background:#0c452c; }
+
+  .table-wrap{
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    overflow:hidden;
+  }
+
+  table.table{
+    width:100%;
+    border-collapse:collapse;
+  }
+
+  table.table thead{
+    background:#0b3b33;
+    color:#fff;
+    text-align:left;
+  }
+
+  table.table th, table.table td{
+    padding:14px 16px;
+    vertical-align:middle;
+  }
+
+  table.table tbody tr:nth-child(odd){
+    background:#f9faf9;
+  }
+
+  table.table tbody tr:hover{
+    background:#eef5f3;
+  }
+
+  table.table td{
+    color:#0b1a16;
+    font-size:15px;
+  }
+
+  .danger{
+    background:#b91c1c;
+    color:#fff;
+    border:none;
+    padding:6px 12px;
+    border-radius:6px;
+    font-weight:600;
+    cursor:pointer;
+    transition:background .2s;
+  }
+  .danger:hover{ background:#991b1b; }
+
+  form{
+    margin:0;
+  }
+</style>
+
+<div class="page-head">
+  <h1>Products</h1>
+  <a class="btn" href="{{ url_for('product_new') }}">+ New Product</a>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>kcal / 100g</th>
+        <th>Protein (g)</th>
+        <th>Carbs (g)</th>
+        <th>Fat (g)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in items %}
+      <tr>
+        <td>{{ p.name }}</td>
+        <td>{{ p.calories_per_100g }}</td>
+        <td>{{ p.protein_g_per_100g }}</td>
+        <td>{{ p.carbs_g_per_100g }}</td>
+        <td>{{ p.fat_g_per_100g }}</td>
+        <td>
+          <form method="post" action="{{ url_for('product_delete', pid=p.id) }}" onsubmit="return confirm('Delete product?');">
+            <button type="submit" class="danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+      {% if not items %}
+      <tr>
+        <td colspan="6" style="text-align:center; color:#6b7280; padding:20px;">
+          No products added yet.
+        </td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

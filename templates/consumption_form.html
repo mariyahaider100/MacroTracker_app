@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .form-card {
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    max-width:600px;
+    margin:0 auto;
+    padding:28px 32px;
+  }
+  .form-card h1{
+    margin-top:0;
+    font-size:26px;
+    color:#0b3b33;
+    text-align:center;
+    font-weight:700;
+    margin-bottom:24px;
+  }
+  form.form{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  label{
+    font-weight:600;
+    color:#0b3b33;
+    margin-bottom:4px;
+  }
+  select, input[type="number"]{
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid #d1d5db;
+    font-size:15px;
+    background:#f9faf9;
+    outline:none;
+    transition:border .2s;
+  }
+  select:focus, input:focus{
+    border-color:#0f5132;
+    background:#fff;
+  }
+  button[type="submit"]{
+    background:#0f5132;
+    color:#fff;
+    border:none;
+    padding:10px 16px;
+    font-weight:600;
+    font-size:16px;
+    border-radius:8px;
+    cursor:pointer;
+    align-self:center;
+    width:160px;
+    transition:background .2s;
+  }
+  button[type="submit"]:hover{
+    background:#0c452c;
+  }
+</style>
+
+<div class="form-card">
+  <h1>Add Consumption</h1>
+  <form method="post" class="form">
+    <div>
+      <label>Meal</label>
+      <select name="meal_id" required>
+        {% for m in meals %}
+          <option value="{{ m.id }}">{{ m.date }} — {{ m.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label>Product</label>
+      <select name="product_id" required>
+        {% for p in products %}
+          <option value="{{ p.id }}">{{ p.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label>Quantity (grams)</label>
+      <input type="number" step="1" name="quantity_g" required>
+    </div>
+
+    <button type="submit">Add</button>
+  </form>
+</div>
+
+{% endblock %}

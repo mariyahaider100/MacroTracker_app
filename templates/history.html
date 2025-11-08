@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .page-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:18px;
+  }
+  .page-head h1{
+    font-size:26px;
+    font-weight:700;
+    color:#0b3b33;
+    margin:0;
+  }
+
+  .table-wrap{
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    overflow:hidden;
+  }
+
+  table.table{
+    width:100%;
+    border-collapse:collapse;
+  }
+
+  table.table thead{
+    background:#0b3b33;
+    color:#fff;
+    text-align:left;
+  }
+
+  table.table th, table.table td{
+    padding:14px 16px;
+  }
+
+  table.table tbody tr:nth-child(odd){
+    background:#f9faf9;
+  }
+
+  table.table tbody tr:hover{
+    background:#eef5f3;
+  }
+
+  table.table td{
+    color:#0b1a16;
+    font-size:15px;
+  }
+
+  .muted{
+    color:#6b7280;
+    font-size:14px;
+  }
+</style>
+
+<div class="page-head">
+  <h1>History (last 14 days)</h1>
+</div>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Calories</th>
+        <th>Protein (g)</th>
+        <th>Carbs (g)</th>
+        <th>Fat (g)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in per_day %}
+      <tr>
+        <td>{{ row.date }}</td>
+        <td>{{ '%.0f'|format(row.totals.calories) }}</td>
+        <td>{{ '%.1f'|format(row.totals.protein) }}</td>
+        <td>{{ '%.1f'|format(row.totals.carbs) }}</td>
+        <td>{{ '%.1f'|format(row.totals.fat) }}</td>
+      </tr>
+      {% endfor %}
+      {% if not per_day %}
+      <tr>
+        <td colspan="5" style="text-align:center; color:#6b7280; padding:20px;">
+          No data available for the last 14 days.
+        </td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

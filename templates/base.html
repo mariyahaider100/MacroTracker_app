@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calorie & Macro Tracker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+  <style>
+    :root{
+      --green-900:#0b3b33;   /* deep navbar green */
+      --green-800:#0f5132;   /* buttons */
+      --bg:#f6f8f7;          /* page background */
+      --card:#ffffff;        /* card bg */
+      --muted:#6b7280;       /* muted text */
+      --shadow:0 2px 10px rgba(0,0,0,.06);
+      --radius:12px;
+    }
+
+    /* Reset-ish */
+    html,body{ height:100%; background:var(--bg); }
+    body{ margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"; color:#0b1a16; }
+
+    /* Top bar (like screenshot) */
+    .topbar{
+      background:var(--green-900);
+      color:#fff;
+      position:sticky; top:0; z-index:20;
+      box-shadow:0 1px 0 rgba(255,255,255,.06) inset;
+    }
+    .topbar-inner{
+      max-width:1200px; margin:0 auto; padding:14px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{
+      font-weight:800; letter-spacing:.2px; font-size:20px;
+    }
+
+    /* Nav links row */
+    .nav-links{
+      display:flex; flex-wrap:wrap; gap:14px;
+    }
+    .nav-links a{
+      color:#eaf7f2; text-decoration:none; font-weight:600; padding:6px 10px; border-radius:8px;
+    }
+    .nav-links a:hover{ background:rgba(255,255,255,.10); }
+
+    /* Welcome banner (green pill) */
+    .welcome-bar{
+      max-width:1200px; margin:10px auto 0; padding:0 16px 14px;
+    }
+    .welcome-pill{
+      background:#2f855a; color:#fff; padding:10px 14px; border-radius:10px; box-shadow:var(--shadow);
+    }
+
+    /* Main container */
+    .container{
+      max-width:1200px; margin:18px auto 32px; padding:0 16px;
+    }
+
+    /* Flash messages */
+    .flash-area{ margin-bottom:16px; display:grid; gap:10px; }
+    .flash{
+      background:var(--card); border-radius:10px; box-shadow:var(--shadow);
+      padding:12px 14px; font-weight:600;
+    }
+    .flash.success{ border-left:6px solid #22c55e; }
+    .flash.error{ border-left:6px solid #ef4444; }
+    .flash.info{ border-left:6px solid #3b82f6; }
+
+    /* Footer (optional) */
+    .footer{ text-align:center; color:var(--muted); padding:24px 0 36px; }
+    @media (max-width: 640px){
+      .nav-links{ gap:8px; }
+      .nav-links a{ padding:6px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top navigation -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">Calorie & Macro Tracker</div>
+
+      <nav class="nav-links">
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('dashboard') }}">Dashboard</a>
+          <a href="{{ url_for('history') }}">History</a>
+          <a href="{{ url_for('products') }}">Products</a>
+          <a href="{{ url_for('meals') }}">Meals</a>
+          <a href="{{ url_for('consumption_new') }}">Add Consumption</a>
+          {% if current_user.is_admin %}
+            <a href="{{ url_for('admin_pending') }}">Pending</a>
+            <a href="{{ url_for('admin_users') }}">Users</a>
+          {% endif %}
+          <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}">Login</a>
+          <a href="{{ url_for('signup') }}">Sign Up</a>
+        {% endif %}
+      </nav>
+    </div>
+
+    {% if current_user.is_authenticated %}
+      <div class="welcome-bar">
+        <div class="welcome-pill">
+          Welcome, {{ current_user.name|default(current_user.username|default(current_user.email|default('User', true), true), true) }}!
+        </div>
+      </div>
+    {% endif %}
+  </header>
+
+  <!-- Page content -->
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-area">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <div class="footer"></div>
+</body>
+</html>
